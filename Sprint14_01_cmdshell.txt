@@ -1,0 +1,277 @@
+Microsoft Windows [Version 10.0.19043.1645]
+(c) Microsoft Corporation. All rights reserved.
+
+#review version of mongo
+C:\Users\Usuario>mongosh --version
+1.3.1
+
+#connect mongo and create first database
+C:\Users\Usuario>mongosh "mongodb+srv://cluster0.4aw1h.mongodb.net/myFirstDatabase" --apiVersion 1 --username yovanna --password itacademy1
+Current Mongosh Log ID: 62670330d3c5867132bab574
+Connecting to:          mongodb+srv://cluster0.4aw1h.mongodb.net/myFirstDatabase?appName=mongosh+1.3.1
+Using MongoDB:          5.0.7 (API Version 1)
+Using Mongosh:          1.3.1
+
+For mongosh info see: https://docs.mongodb.com/mongodb-shell/
+
+
+To help improve our products, anonymous usage data is collected and sent to MongoDB periodically (https://www.mongodb.com/legal/privacy-policy).
+You can opt-out by running the disableTelemetry() command.
+
+#review de current database
+Atlas atlas-11bw70-shard-0 [primary] myFirstDatabase> db
+myFirstDatabase
+
+#review existing databases
+Atlas atlas-11bw70-shard-0 [primary] myFirstDatabase> show dbs
+S14_T01  8.19 kB
+admin     311 kB
+local    1.42 GB
+
+#select database to use
+Atlas atlas-11bw70-shard-0 [primary] myFirstDatabase> use test_db
+Atlas atlas-11bw70-shard-0 [primary] test_db>
+
+#create a new collection in the database
+Atlas atlas-11bw70-shard-0 [primary] test_db> db.createCollection("users")
+{ ok: 1 }
+
+#insert a new document with basic information (insert one command)
+Atlas atlas-11bw70-shard-0 [primary] test_db> db.users.insertOne({name:"yovanna", lastname:"valencia", age:31, weigth:65, heigth:167, profession:["Phd Candidate","Architect"]})
+{
+  acknowledged: true,
+  insertedId: ObjectId("6267044573b133c13294797f")
+}
+
+#insert a more documents (insert many command)
+Atlas atlas-11bw70-shard-0 [primary] test_db> db.users.insertMany([{name:"Benjamin", lastname:"Guiraud", age:33, weigth:90, heigheigth:198, profession:["videogame","Technical Artist"]},
+... {name:"Yulianna", lastname:"Barba", age:29, weigth:55, heigth:163, profession:["economist","data analyst"]},
+... {name:"Ezequiel", lastname:"Aguirre", age:31, weigth:80, heigth:190, profession:["videogame","trainer"]},
+... {name:"Aline", lastname:"Aguirre", age:32, weigth:60, heigth:163, profession:["consultant","management"]},
+... ])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId("626705b673b133c132947980"),
+    '1': ObjectId("626705b673b133c132947981"),
+    '2': ObjectId("626705b673b133c132947982"),
+    '3': ObjectId("626705b673b133c132947983")
+  }
+}
+
+#search collection (command find)
+Atlas atlas-11bw70-shard-0 [primary] test_db> db.users.find()
+[
+  {
+    _id: ObjectId("6267044573b133c13294797f"),
+    name: 'yovanna',
+    lastname: 'valencia',
+    age: 31,
+    weigth: 65,
+    heigth: 167,
+    profession: [ 'Phd Candidate', 'Architect' ]
+  },
+  {
+    _id: ObjectId("626705b673b133c132947980"),
+    name: 'Benjamin',
+    lastname: 'Guiraud',
+    age: 33,
+    weigth: 90,
+    heigth: 198,
+    profession: [ 'videogame', 'Technical Artist' ]
+  },
+  {
+    _id: ObjectId("626705b673b133c132947981"),
+    name: 'Yulianna',
+    lastname: 'Barba',
+    age: 29,
+    weigth: 55,
+    heigth: 163,
+    profession: [ 'economist', 'data analyst' ]
+  },
+  {
+    _id: ObjectId("626705b673b133c132947982"),
+    name: 'Ezequiel',
+    lastname: 'Aguirre',
+    age: 31,
+    weigth: 80,
+    heigth: 190,
+    profession: [ 'videogame', 'trainer' ]
+  },
+  {
+    _id: ObjectId("626705b673b133c132947983"),
+    name: 'Aline',
+    lastname: 'Aguirre',
+    age: 32,
+    weigth: 60,
+    heigth: 163,
+    profession: [ 'consultant', 'management' ]
+  }
+]
+
+#Search for a specific piece of information
+Atlas atlas-11bw70-shard-0 [primary] test_db> db.users.find({name:"Yulianna"})
+[
+  {
+    _id: ObjectId("626705b673b133c132947981"),
+    name: 'Yulianna',
+    lastname: 'Barba',
+    age: 29,
+    weigth: 55,
+    heigth: 163,
+    profession: [ 'economist', 'data analyst' ]
+  }
+]
+
+#search for the number of users with specific characteristics
+Atlas atlas-11bw70-shard-0 [primary] test_db> db.users.find({age:31}).count()
+2
+
+#find the first document that fullfils the condition
+Atlas atlas-11bw70-shard-0 [primary] test_db> db.users.findOne({age:{$gt:30}})
+{
+  _id: ObjectId("6267044573b133c13294797f"),
+  name: 'yovanna',
+  lastname: 'valencia',
+  age: 31,
+  weigth: 65,
+  heigth: 167,
+  profession: [ 'Phd Candidate', 'Architect' ]
+}
+
+#find all the users that fullfill the condition
+Atlas atlas-11bw70-shard-0 [primary] test_db> db.users.find({age:{$gt:30}})
+[
+  {
+    _id: ObjectId("6267044573b133c13294797f"),
+    name: 'yovanna',
+    lastname: 'valencia',
+    age: 31,
+    weigth: 65,
+    heigth: 167,
+    profession: [ 'Phd Candidate', 'Architect' ]
+  },
+  {
+    _id: ObjectId("626705b673b133c132947980"),
+    name: 'Benjamin',
+    lastname: 'Guiraud',
+    age: 33,
+    weigth: 90,
+    heigth: 198,
+    profession: [ 'videogame', 'Technical Artist' ]
+  },
+  {
+    _id: ObjectId("626705b673b133c132947982"),
+    name: 'Ezequiel',
+    lastname: 'Aguirre',
+    age: 31,
+    weigth: 80,
+    heigth: 190,
+    profession: [ 'videogame', 'trainer' ]
+  },
+  {
+    _id: ObjectId("626705b673b133c132947983"),
+    name: 'Aline',
+    lastname: 'Aguirre',
+    age: 32,
+    weigth: 60,
+    heigth: 163,
+    profession: [ 'consultant', 'management' ]
+  }
+]
+
+#update specific data in a document
+Atlas atlas-11bw70-shard-0 [primary] test_db> db.users.updateOne({name:"Aline}, {$set {lastname:"Romero}})
+Atlas atlas-11bw70-shard-0 [primary] test_db> db.users.find({name:"Aline"})
+[
+  {cknowledged: true,
+    _id: ObjectId("626705b673b133c132947983"),
+    name: 'Aline',
+    lastname: 'Romero',
+    age: 32,unt: 0
+    weigth: 60,
+    heigth: 163,
+    profession: [ 'consultant', 'management' ]
+  }
+]
+
+#insert new if not find
+Atlas atlas-11bw70-shard-0 [primary] test_db> db.users.updateOne({name:"Lorena"},{$set: {lastname:"Abella",age:28, weigth:58,heigth:165,profession:["nutricionist"]}},{upsert:true})
+{
+  acknowledged: true,
+  insertedId: ObjectId("62670a5346aca8efd666f87f"),
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 1
+}
+
+#increment all the ages in the database by 1
+Atlas atlas-11bw70-shard-0 [primary] test_db> db.users.updateMany({},{$inc:{age:1}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 6,
+  modifiedCount: 6,
+  upsertedCount: 0
+}
+Atlas atlas-11bw70-shard-0 [primary] test_db> db.users.find()
+[
+  {
+    _id: ObjectId("6267044573b133c13294797f"),
+    name: 'yovanna',
+    lastname: 'valencia',
+    age: 32,
+    weigth: 65,
+    heigth: 167,
+    profession: [ 'Phd Candidate', 'Architect' ]
+  },
+  {
+    _id: ObjectId("626705b673b133c132947980"),
+    name: 'Benjamin',
+    lastname: 'Guiraud',
+    age: 34,
+    weigth: 90,
+    heigth: 198,
+    profession: [ 'videogame', 'Technical Artist' ]
+  },
+  {
+    _id: ObjectId("626705b673b133c132947981"),
+    name: 'Yulianna',
+    lastname: 'Barba',
+    age: 30,
+    weigth: 55,
+    heigth: 163,
+    profession: [ 'economist', 'data analyst' ]
+  },
+  {
+    _id: ObjectId("626705b673b133c132947982"),
+    name: 'Ezequiel',
+    lastname: 'Aguirre',
+    age: 32,
+    weigth: 80,
+    heigth: 190,
+    profession: [ 'videogame', 'trainer' ]
+  },
+  {
+    _id: ObjectId("626705b673b133c132947983"),
+    name: 'Aline',
+    lastname: 'Romero',
+    age: 33,
+    weigth: 60,
+    heigth: 163,
+    profession: [ 'consultant', 'management' ]
+  },
+  {
+    _id: ObjectId("62670a5346aca8efd666f87f"),
+    name: 'Lorena',
+    age: 29,
+    heigth: 165,
+    lastname: 'Abella',
+    profession: [ 'nutricionist' ],
+    weigth: 58
+  }
+]
+
+#delete a document
+Atlas atlas-11bw70-shard-0 [primary] test_db> db.users.deleteOne({name:"Lorena"})
+{ acknowledged: true, deletedCount: 1 }
